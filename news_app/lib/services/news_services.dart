@@ -1,86 +1,24 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:news_app/models/news_model.dart';
+import 'package:http/http.dart' as http;
 
-NewsModel newsModelFromJson(String str) => NewsModel.fromJson(json.decode(str));
+class NewsService with ChangeNotifier {
+  List<Article> articles = [];
 
-String newsModelToJson(NewsModel data) => json.encode(data.toJson());
+  String _url = "http://newsapi.org/v2";
+  String _apiKey = "b423dc14468c4cedbe2d5866e235c3cf";
 
-class NewsModel {
-  NewsModel({
-    this.articles,
-  });
+  NewsService() {
+    getAllArticles();
+  }
 
-  List<Article> articles;
+  void getAllArticles() async {
+    final String data =
+        "everything?q=apple&from=2020-08-24&to=2020-08-24&sortBy=popularity&apiKey=";
 
-  factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
-        articles: List<Article>.from(
-            json["articles"].map((x) => Article.fromJson(x))),
-      );
+    final resp = await http.get("$_url/$data$_apiKey");
 
-  Map<String, dynamic> toJson() => {
-        "articles": List<dynamic>.from(articles.map((x) => x.toJson())),
-      };
-}
-
-class Article {
-  Article({
-    this.source,
-    this.author,
-    this.title,
-    this.description,
-    this.url,
-    this.urlToImage,
-    this.publishedAt,
-    this.content,
-  });
-
-  Source source;
-  String author;
-  String title;
-  String description;
-  String url;
-  String urlToImage;
-  DateTime publishedAt;
-  String content;
-
-  factory Article.fromJson(Map<String, dynamic> json) => Article(
-        source: Source.fromJson(json["source"]),
-        author: json["author"],
-        title: json["title"],
-        description: json["description"],
-        url: json["url"],
-        urlToImage: json["urlToImage"],
-        publishedAt: DateTime.parse(json["publishedAt"]),
-        content: json["content"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "source": source.toJson(),
-        "author": author,
-        "title": title,
-        "description": description,
-        "url": url,
-        "urlToImage": urlToImage,
-        "publishedAt": publishedAt.toIso8601String(),
-        "content": content,
-      };
-}
-
-class Source {
-  Source({
-    this.id,
-    this.name,
-  });
-
-  String id;
-  String name;
-
-  factory Source.fromJson(Map<String, dynamic> json) => Source(
-        id: json["id"] == null ? null : json["id"],
-        name: json["name"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id == null ? null : id,
-        "name": name,
-      };
+    articles = newsModelFromJson(resp.body).articles;
+    notifyListeners();
+  }
 }
