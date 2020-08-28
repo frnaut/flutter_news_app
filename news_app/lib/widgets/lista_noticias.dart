@@ -13,6 +13,7 @@ class ListNews extends StatefulWidget {
 class _ListNewsState extends State<ListNews>
     with AutomaticKeepAliveClientMixin {
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return (this.widget.articles.length == 0)
         ? Center(

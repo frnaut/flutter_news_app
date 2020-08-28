@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/helpers/categories.dart';
 import 'package:news_app/pages/tabs_page.dart';
 import 'package:news_app/services/news_services.dart';
 import 'package:news_app/themes/dart_theme.dart';
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
             create: (_) => new NewsService(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => Categories(),
           )
         ],
         child:

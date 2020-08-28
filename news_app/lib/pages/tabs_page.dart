@@ -9,6 +9,15 @@ class HomePage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => new _NavigationModel(),
       child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "NewsApp",
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                letterSpacing: 1.0, decoration: TextDecoration.underline),
+          ),
+          elevation: 0.0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ),
         body: _Pages(),
         bottomNavigationBar: _Navigationbar(),
       ),
